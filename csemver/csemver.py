@@ -15,6 +15,7 @@ class csemver:
 		self._version = sv.parse(version);
 		self._updateVI();
 	
+	### Propertys ####
 	@property
 	def build(self):
 		""" 
@@ -27,6 +28,7 @@ class csemver:
 	@build.setter
 	def build(self, val):
 		self._build(val);
+		self._updateVI();
 
 	def _build(self, val):
 		newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],self._version['prerelease'],val);
@@ -35,6 +37,7 @@ class csemver:
 	@build.deleter
 	def build(self):
 		self._version['build'] = None;
+		self._updateVI();
 
 	@property
 	def prerelease(self):
@@ -43,11 +46,12 @@ class csemver:
 
 		Set this property to set a prerelease (Python Version >= 3)
 		"""
-		self._version['prerelease'];
+		return self._version['prerelease'];
 
 	@prerelease.setter
 	def prerelease(self,val):
 		self._prerelease(val);
+		self._updateVI();
 		
 	def _prerelease(self,val):
 		newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],val,self._version['build']);
@@ -56,6 +60,7 @@ class csemver:
 	@prerelease.deleter
 	def prerelease(self):
 		self._version['prerelease'] = None;
+		self._updateVI();
 
 	@property
 	def number(self):
@@ -64,7 +69,7 @@ class csemver:
 		
 		Delete this property to reset the version to 0.1.0 (Python Version >= 3)
 		"""
-		return self._version.copy();
+		return str(self);
 
 	@number.setter
 	def number(self,value):
@@ -94,21 +99,25 @@ class csemver:
 	def setBuild(self,val):
 		""" Python 2.7 wrapper """
 		self._build(val);
+		self._updateVI();
 
 	@deprecated
 	def delBuild(self):
 		""" Python 2.7 wrapper """
 		self._version['build'] = None;
+		self._updateVI();
 
 	@deprecated
 	def setPrerelease(self,val):
 		""" Python 2.7 wrapper """
 		self._prerelease(val);
+		self._updateVI();
 
 	@deprecated
 	def delPrerelease(self):
 		""" Python 2.7 wrapper """
-		self._version['prerelease'] = None;
+		self._version['prerelease'] = None;		
+		self._updateVI();
 
 	def incPatch(self, incBy=1):
 		""" Increase patch version x.y.z -> x.y.(z+incBy) """
@@ -134,6 +143,28 @@ class csemver:
 	def __getitem__(self, key):
 		""" Returns either major, minor, patch, prerelease or build """
 		return self._version[key];
+
+	def __setitem__(self, key, val):
+		if key not in ["major", "minor", "patch", "prerelease", "build"]:
+			raise KeyError("Key does not exists");
+
+		if key is "major":
+			newstr = sv.format_version(val,self._version['minor'],self._version['patch'],self._version['prerelease'],self._version['build']);
+		elif key is "minor":
+			newstr = sv.format_version(self._version['major'],val,self._version['patch'],self._version['prerelease'],self._version['build']);
+		elif key is "patch":
+			newstr = sv.format_version(self._version['major'],self._version['minor'],val, self._version['prerelease'],self._version['build']);
+		elif key is "build":
+			newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],self._version['prerelease'],self._version['build']);
+		elif key is "prerelease":
+			newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],val,self._version['build']);
+		elif key is "build":
+			newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],self._version['prerelease'],self._version['build']);
+		self._version = sv.parse(newstr);
+		self._updateVI();
+
+			
+
 
 	def __str__(self):
 		""" Returns a string representation of the semantic version """
@@ -207,6 +238,6 @@ class csemver:
 	def __repr__(self):
 		return "{:}<{:}> instance at 0x{:016X}".format(self.__class__.__name__,self.__str__(), id(self));
 
-def parse(version):
+def parse(version = "0.1.0"):
 	""" Just an alias for csemver.csemver(version) """
 	return csemver(version);

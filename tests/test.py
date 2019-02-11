@@ -31,11 +31,7 @@ class TestCsemver(TestCase):
 
 	def test_number_descriptor(self):
 		s = cs.parse("1.2.3-pre+build");
-		self.assertEqual(s.number['major'],1);
-		self.assertEqual(s.number['minor'],2);
-		self.assertEqual(s.number['patch'],3);
-		self.assertEqual(s.number['prerelease'],"pre");
-		self.assertEqual(s.number['build'],"build");
+		self.assertEqual(s.number, "1.2.3-pre+build");
 
 	def test_assign_version(self):
 		s = cs.parse("0.1.0");

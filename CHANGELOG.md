@@ -8,6 +8,11 @@
 + Introduced python2 support (maybe it will be dropped in the future)
 + Added unit tests
 
+
+### Fixed
+* csmver.parse does not had an default key
+* some getters did not return a value
+
 ### Changed
 * `incMajor, incMinor, incPatch` are now chainable and support additional integer parameter to specify amount
 * Added deprecation warning to setNumber
