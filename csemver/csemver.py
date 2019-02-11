@@ -1,25 +1,70 @@
-import semver as sv;
+import semver as sv
 import copy
+from .utils import deprecated
+
 __author__ = "Sebastian Tilders"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
+
 
 class csemver:
 	""" Representation of an semantic software version """
 
-	__slots__ = ['major', 'minor', 'patch', 'prerelease', 'build', '_version', '_vInfo'];
-	def __init__(self, version:str = "0.1.0"):
+	__slots__ = ['_version', '_vInfo'];
+	def __init__(self, version = "0.1.0"):
 		""" Initialises a new Version instance"""
 		self._version = sv.parse(version);
 		self._updateVI();
 	
 	@property
+	def build(self):
+		""" 
+		Contains the build-tag
+
+		Set this property to set a build-tag (Python Version >= 3)
+		"""
+		return self._version['build'];
+
+	@build.setter
+	def build(self, val):
+		self._build(val);
+
+	def _build(self, val):
+		newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],self._version['prerelease'],val);
+		self._version = sv.parse(newstr);
+
+	@build.deleter
+	def build(self):
+		self._version['build'] = None;
+
+	@property
+	def prerelease(self):
+		""" 
+		Contains the prerelease
+
+		Set this property to set a prerelease (Python Version >= 3)
+		"""
+		self._version['prerelease'];
+
+	@prerelease.setter
+	def prerelease(self,val):
+		self._prerelease(val);
+		
+	def _prerelease(self,val):
+		newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],val,self._version['build']);
+		self._version = sv.parse(newstr);
+
+	@prerelease.deleter
+	def prerelease(self):
+		self._version['prerelease'] = None;
+
+	@property
 	def number(self):
 		"""
 		Propery which contains directory for the current version.
 		
-		Delete this property to reset the version to 0.1.0
+		Delete this property to reset the version to 0.1.0 (Python Version >= 3)
 		"""
-		return self._version;
+		return self._version.copy();
 
 	@number.setter
 	def number(self,value):
@@ -33,21 +78,53 @@ class csemver:
 		self._version = sv.parse("0.1.0");
 		self._updateVI();
 
-	def incPatch(self, incBy:int=1):
+	@deprecated
+	def setNumber(self, value):
+		""" Python 2.7 wrapper """
+		self._version = sv.parse(value);
+		self._updateVI();
+
+	@deprecated
+	def delNumber(self):
+		""" Python 2.7 wrapper """
+		self._version = sv.parse("0.1.0");
+		self._updateVI();
+
+	@deprecated
+	def setBuild(self,val):
+		""" Python 2.7 wrapper """
+		self._build(val);
+
+	@deprecated
+	def delBuild(self):
+		""" Python 2.7 wrapper """
+		self._version['build'] = None;
+
+	@deprecated
+	def setPrerelease(self,val):
+		""" Python 2.7 wrapper """
+		self._prerelease(val);
+
+	@deprecated
+	def delPrerelease(self):
+		""" Python 2.7 wrapper """
+		self._version['prerelease'] = None;
+
+	def incPatch(self, incBy=1):
 		""" Increase patch version x.y.z -> x.y.(z+incBy) """
 		verStr = self._bumpN(sv.bump_patch, incBy);
 		self._version = sv.parse(verStr);
 		self._updateVI();
 		return self;
 
-	def incMinor(self,incBy:int=1):
+	def incMinor(self,incBy=1):
 		""" Increase minor version x.y.z -> x.(y+incBy).0 """
 		verStr = self._bumpN(sv.bump_minor,incBy);
 		self._version = sv.parse(verStr);
 		self._updateVI();
 		return self;
 
-	def incMajor(self, incBy:int=1):
+	def incMajor(self, incBy=1):
 		""" Increase major version x.y.z -> (x+incBy).0.0 """
 		verStr = self._bumpN(sv.bump_major, incBy);
 		self._version = sv.parse(verStr);
@@ -131,4 +208,5 @@ class csemver:
 		return "{:}<{:}> instance at 0x{:016X}".format(self.__class__.__name__,self.__str__(), id(self));
 
 def parse(version):
+	""" Just an alias for csemver.csemver(version) """
 	return csemver(version);

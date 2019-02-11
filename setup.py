@@ -4,7 +4,7 @@ with open("README.md") as f:
 
 setuptools.setup(
     name='csemver',
-    version='0.1.0',
+    version='0.2.0.dev0',
     platforms='any',
     description='Object orientied optimized variant of the semver package',
     author='Sebastian Tilders',
@@ -14,8 +14,11 @@ setuptools.setup(
     license='GPL3',
     url='http://www.github.com/sebi2020/csemver',
     install_requires = ['semver'],
-    py_modules = ['csemver'],
+    packages=setuptools.find_packages(),
+    test_suite='nose.collector',
+    tests_require=['nose'],
     classifiers=[
+        "Programming Language :: Python :: 2.7",
         'Programming Language :: Python :: 3',
         "Operating System :: OS Independent",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
