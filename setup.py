@@ -4,7 +4,7 @@ with open("README.md") as f:
 
 setuptools.setup(
     name='csemver',
-    version='0.2.0.dev0',
+    version='0.2.1.rc0',
     platforms='any',
     description='Object orientied optimized variant of the semver package',
     author='Sebastian Tilders',
