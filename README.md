@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/Sebi2020/csemver.svg?branch=master)](https://travis-ci.com/Sebi2020/csemver)
 ![Version Github: v0.2.0](https://img.shields.io/github/release/sebi2020/csemver.svg?colorB=green&style=flat)
 [![Version PyPi: v0.2.0](https://img.shields.io/pypi/v/csemver.svg?colorB=green&style=flat)](https://pypi.org/project/csemver/)
 ![Issue Count](https://img.shields.io/github/issues-raw/sebi2020/csemver.svg?style=flat)
