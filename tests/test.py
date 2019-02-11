@@ -112,3 +112,18 @@ class TestCsemver(TestCase):
 		a = cs.parse("1.0.0-pre+build");
 		b = cs.parse("1.0.0-pre+build1");
 		self.assertFalse(a != b);
+
+	def test_index_ops(self):
+		a = cs.parse(); # defaults to 0.1.0
+		a['major'] = 2
+		self.assertEqual(a.number,"2.1.0")
+		a['minor'] = 2
+		self.assertEqual(a.number,"2.2.0")
+		a['patch'] = 1
+		self.assertEqual(a.number,"2.2.1")
+		a['prerelease'] = "dev"
+		self.assertEqual(a.number,"2.2.1-dev")
+		a['build'] = "build0"
+		self.assertEqual(a.number,"2.2.1-dev+build0")
+		#a['build'] = None
+		#self.assertEqual(a.number,"2.2.1-dev")

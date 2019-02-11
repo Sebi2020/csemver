@@ -71,6 +71,35 @@ print(a)
 foo@bar:~$ python test.py
 0.1.0
 1.0.0-pre+build.1
+2.0.0-pre+build.1
+2.0.0-dev+build.1
+```
+
+### Manipulate specific parts
+```python
+from csemver import csemver as Version
+a = Version(); # defaults to 0.1.0
+a['major'] = 2
+print(a)
+a['minor'] = 2
+print(a)
+a['patch'] = 1
+print(a)
+a['prerelease'] = "dev"
+print(a)
+a['build'] = "build0"
+print(a)
+a['build'] = None
+print(a)
+```
+
+```bash
+2.1.0
+2.2.0
+2.2.1
+2.2.1-dev
+2.2.1-dev+build0
+2.2.1-dev
 ```
 ### Reset Version
 Delete the `number` property to reset the Version to `0.1.0`
