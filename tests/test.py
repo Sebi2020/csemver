@@ -37,7 +37,7 @@ class TestCsemver(TestCase):
 
 	def test_assign_version(self):
 		if sys.version_info < (3, 0):
-			raise SkipTest("must use python 3.0 or greater")
+			raise SkipTest("must be Python 3.0 or greater")
 		s = cs.parse("0.1.0");
 		s.number = "1.0.0";
 		self.assertEqual(str(s),"1.0.0");
@@ -127,3 +127,33 @@ class TestCsemver(TestCase):
 		self.assertEqual(a.number,"2.2.1-dev+build0")
 		#a['build'] = None
 		#self.assertEqual(a.number,"2.2.1-dev")
+
+	def test_special_fields(self):
+		if sys.version_info < (3,0):
+			raise SkipTest("must be Python 3.0 or greater");
+		a = cs.parse();
+		a.prerelease = "pre";
+		self.assertEqual(a.number, "0.1.0-pre");
+
+		a.build = "build2";
+		self.assertEqual(a.number, "0.1.0-pre+build2");
+
+		del a.prerelease
+		self.assertEqual(a.number, "0.1.0+build2")
+
+		del a.build
+		self.assertEqual(a.number, "0.1.0")
+
+	def test_special_field_setters(self):
+		a = cs.parse();
+		a.setPrerelease("pre");
+		self.assertEqual(a.number, "0.1.0-pre");
+
+		a.setBuild("build2");
+		self.assertEqual(a.number, "0.1.0-pre+build2");
+
+		a.delPrerelease();
+		self.assertEqual(a.number, "0.1.0+build2")
+
+		a.delBuild();
+		self.assertEqual(a.number, "0.1.0")		

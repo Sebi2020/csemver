@@ -154,12 +154,10 @@ class csemver:
 			newstr = sv.format_version(self._version['major'],val,self._version['patch'],self._version['prerelease'],self._version['build']);
 		elif key is "patch":
 			newstr = sv.format_version(self._version['major'],self._version['minor'],val, self._version['prerelease'],self._version['build']);
-		elif key is "build":
-			newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],self._version['prerelease'],self._version['build']);
 		elif key is "prerelease":
 			newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],val,self._version['build']);
 		elif key is "build":
-			newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],self._version['prerelease'],self._version['build']);
+			newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],self._version['prerelease'],val);
 		self._version = sv.parse(newstr);
 		self._updateVI();
 
