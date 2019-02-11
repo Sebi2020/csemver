@@ -8,4 +8,4 @@ python:
   - "3.6"
 
 scripts:
-  - nosetest
+  - python ./setup.py test
