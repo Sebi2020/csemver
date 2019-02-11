@@ -1,5 +1,7 @@
 import csemver as cs
 from unittest import TestCase
+from unittest import SkipTest
+import sys
 
 class TestCsemver(TestCase):
 	def test_valid_string(self):
@@ -34,6 +36,8 @@ class TestCsemver(TestCase):
 		self.assertEqual(s.number, "1.2.3-pre+build");
 
 	def test_assign_version(self):
+		if sys.version_info < (3, 0):
+			raise SkipTest("must use python 3.0 or greater")
 		s = cs.parse("0.1.0");
 		s.number = "1.0.0";
 		self.assertEqual(str(s),"1.0.0");
