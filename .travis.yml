@@ -7,5 +7,4 @@ python:
   - "3.5"
   - "3.6"
 
-scripts:
-  - python ./setup.py test
+script: python ./setup.py test
