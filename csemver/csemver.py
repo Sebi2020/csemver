@@ -166,7 +166,7 @@ class csemver:
 		mmp = parts.__iter__()
 		# Check major,minor,patch
 		for n in range (0,3):
-			i,v = mmp.__next__()
+			i,v = next(mmp)
 			if(i == v):continue
 			if(i > v):
 				return True
@@ -174,7 +174,7 @@ class csemver:
 				return False
 		
 		# Check if one prerelease field is none
-		i,v = mmp.__next__()
+		i,v = next(mmp)
 		if (i is None) and (v is not None):
 			return True
 
@@ -199,7 +199,7 @@ class csemver:
 		mmp = parts.__iter__()
 		# Check major,minor,patch
 		for n in range (0,3):
-			i,v = mmp.__next__()
+			i,v = next(mmp)
 			if(i == v):continue
 			if(i < v):
 				return True
@@ -207,7 +207,7 @@ class csemver:
 				return False
 		
 		# Check if one prerelease field is none
-		i,v = mmp.__next__()
+		i,v = next(mmp)
 		if (i is not None) and (v is None):
 			return True
 
