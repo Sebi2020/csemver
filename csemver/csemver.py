@@ -185,6 +185,8 @@ class csemver:
 		i,v = next(mmp)
 		if (i is None) and (v is not None):
 			return True
+		elif (i is not None) and (v is None):
+			return False
 
 		# Check prerelease identfiers
 		pa = i.split(".")
@@ -218,6 +220,8 @@ class csemver:
 		i,v = next(mmp)
 		if (i is not None) and (v is None):
 			return True
+		elif (i is None) and (v is not None):
+			return False
 
 		# Check prerelease identfiers
 		pa = i.split(".")
