@@ -1,4 +1,3 @@
-import semver as sv
 import re,copy
 from collections import namedtuple,OrderedDict
 
