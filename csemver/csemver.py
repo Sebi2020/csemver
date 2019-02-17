@@ -62,6 +62,14 @@ class csemver:
 	def _prerelease(self,val):
 		newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],val,self._version['build']);
 		self._version = sv.parse(newstr);
+	
+	@deprecated
+	def setNumber(self,val):
+		self._version = self._parse(val)
+
+	@deprecated
+	def delNumber(self):
+		self._version = self._parse("0.1.0")
 
 	@property
 	def number(self):

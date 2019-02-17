@@ -42,6 +42,16 @@ class TestCsemver(TestCase):
 		s.number = "1.0.0";
 		self.assertEqual(str(s),"1.0.0");
 
+	def test_set_version(self):
+		s = cs.parse("0.1.0");
+		s.setNumber("1.0.0");
+		self.assertEqual(str(s),"1.0.0");
+
+	def test_del_version(self):
+		s = cs.parse("0.1.1")
+		s.delNumber()
+		self.assertEqual(str(s),"0.1.0")
+
 	def test_addition(self):
 		a = cs.parse("0.0.1");
 		b = cs.parse("0.2.0");
