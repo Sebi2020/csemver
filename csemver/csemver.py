@@ -272,13 +272,13 @@ class csemver:
 		if m is None:
 			raise ValueError("Invalid semver string: '%s'" % str);
 		m = list(m.groups())
-		return 	OrderedDict({
-			'major':int(m[0]),
-			'minor':int(m[1]),
-			'patch':int(m[2]),
-			'prerelease': m[4],
-			'build': m[9]
-			})
+		ret = OrderedDict();
+		ret['major'] = int(m[0])
+		ret['minor'] = int(m[1])
+		ret['patch'] = int(m[2])
+		ret['prerelease'] = m[4]
+		ret['build'] = m[9]
+		return ret
 
 def parse(version = "0.1.0"):
 	""" Just an alias for csemver.csemver(version) """
