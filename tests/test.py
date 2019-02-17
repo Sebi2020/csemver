@@ -127,35 +127,3 @@ class TestCsemver(TestCase):
 		self.assertEqual(a.number,"2.2.1-dev+build0")
 		#a['build'] = None
 		#self.assertEqual(a.number,"2.2.1-dev")
-
-	def test_special_fields(self):
-		raise SkipTest("Deprecated")
-		if sys.version_info < (3,0):
-			raise SkipTest("must be Python 3.0 or greater");
-		a = cs.parse();
-		a.prerelease = "pre";
-		self.assertEqual(a.number, "0.1.0-pre");
-
-		a.build = "build2";
-		self.assertEqual(a.number, "0.1.0-pre+build2");
-
-		del a.prerelease
-		self.assertEqual(a.number, "0.1.0+build2")
-
-		del a.build
-		self.assertEqual(a.number, "0.1.0")
-
-	def test_special_field_setters(self):
-		raise SkipTest("Deprecated")
-		a = cs.parse();
-		a.setPrerelease("pre");
-		self.assertEqual(a.number, "0.1.0-pre");
-
-		a.setBuild("build2");
-		self.assertEqual(a.number, "0.1.0-pre+build2");
-
-		a.delPrerelease();
-		self.assertEqual(a.number, "0.1.0+build2")
-
-		a.delBuild();
-		self.assertEqual(a.number, "0.1.0")		
