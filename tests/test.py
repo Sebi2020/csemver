@@ -129,6 +129,7 @@ class TestCsemver(TestCase):
 		#self.assertEqual(a.number,"2.2.1-dev")
 
 	def test_special_fields(self):
+		raise SkipTest("Deprecated")
 		if sys.version_info < (3,0):
 			raise SkipTest("must be Python 3.0 or greater");
 		a = cs.parse();
@@ -145,6 +146,7 @@ class TestCsemver(TestCase):
 		self.assertEqual(a.number, "0.1.0")
 
 	def test_special_field_setters(self):
+		raise SkipTest("Deprecated")
 		a = cs.parse();
 		a.setPrerelease("pre");
 		self.assertEqual(a.number, "0.1.0-pre");
