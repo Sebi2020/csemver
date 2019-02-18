@@ -77,33 +77,41 @@ class TestCsemver(TestCase):
 		a = cs.parse("2.0.0");
 		b = cs.parse("1.0.0");
 		self.assertTrue(a>b);
+		self.assertFalse(b>a)
 		a = cs.parse("2.0.0");
 		b = cs.parse("2.0.0-pre");
 		self.assertTrue(a>b);
+		self.assertFalse(b>a)
 
 		a = cs.parse("0.1.0-pre1");
 		b = cs.parse("0.1.0-pre");
 		self.assertTrue(a>b);
+		self.assertFalse(b>a)
 
 		a = cs.parse("0.1.0-pre.1")
 		b = cs.parse("0.1.0-pre")
 		self.assertTrue(a>b)
+		self.assertFalse(b>a)
 
 	def test_comprehension_smaller(self):
 		a = cs.parse("1.0.0");
 		b = cs.parse("2.0.0");
 		self.assertTrue(a<b);
+		self.assertFalse(b<a);
 		a = cs.parse("1.0.0-pre");
 		b = cs.parse("1.0.0");
 		self.assertTrue(a<b);
+		self.assertFalse(b<a);
 
 		a = cs.parse("0.1.0-pre");
 		b = cs.parse("0.1.0-pre1");
 		self.assertTrue(a<b);
+		self.assertFalse(b<a)
 
 		a = cs.parse("0.1.0-pre")
 		b = cs.parse("0.1.0-pre.1")
 		self.assertTrue(a<b)
+		self.assertFalse(b<a)
 
 	def test_comprehension_equal(self):
 		a = cs.parse("1.0.0");
@@ -144,8 +152,32 @@ class TestCsemver(TestCase):
 		self.assertEqual(a.number,"2.2.1-dev")
 		a['build'] = "build0"
 		self.assertEqual(a.number,"2.2.1-dev+build0")
-		#a['build'] = None
-		#self.assertEqual(a.number,"2.2.1-dev")
+		a['build'] = None
+		self.assertEqual(a.number,"2.2.1-dev")
+
+	def test_wrong_index_op_value_raises_exception(self):
+		a = cs.parse(); # defaults to 0.1.0
+		with self.assertRaises(ValueError) as e:
+			a['major'] = "02"
+		with self.assertRaises(ValueError) as e:
+			a['minor'] = "01"
+		with self.assertRaises(ValueError) as e:
+			a['patch'] = "03"
+		with self.assertRaises(ValueError) as e:
+			a['prerelease'] = "+dev"
+		with self.assertRaises(ValueError) as e:
+			a['build'] = "+build0"
+
+		with self.assertRaises(TypeError) as e:
+			a['major'] = []
+		with self.assertRaises(TypeError) as e:
+			a['minor'] = []
+		with self.assertRaises(TypeError) as e:
+			a['patch'] = []
+		with self.assertRaises(TypeError) as e:
+			a['prerelease'] = 3
+		with self.assertRaises(TypeError) as e:
+			a['build'] = 5
 
 	def test_wrong_number_raises_exception(self):
 		self.assertRaises(ValueError, cs.parse,"0.1.1d")
@@ -183,4 +215,5 @@ class TestCsemver(TestCase):
 		a = cs.parse("1.0.0-pre")
 		b = cs.parse("1.0.0")
 		self.assertTrue(a <= b)
+		self.assertFalse(b <= a)
 		self.assertTrue(a <= a)
