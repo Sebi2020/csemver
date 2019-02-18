@@ -39,14 +39,6 @@ class csemver:
 	def __init__(self, version = "0.1.0"):
 		""" Initialises a new Version instance"""
 		self._version = self._parse(version)
-		self.str_to_fun = {
-		'<': self.__lt__,
-		'<=':self.__le__,
-		'>': self.__gt__,
-		'>=': self.__ge__,
-		'==': self.__eq__,
-		'!=': self.__ne__
-		}
 	
 	@deprecated
 	def setNumber(self,val):
@@ -101,7 +93,7 @@ class csemver:
 	def __getitem__(self, key):
 		""" Returns either major, minor, patch, prerelease or build """
 		if isinstance(key,int):
-			return tuple(self._version.values())[key]
+			return tuple(self._version.values())[:len(self)][key]
 
 		return self._version[key];
 	def __len__(self):
@@ -134,6 +126,8 @@ class csemver:
 	def __delitem__(self,key):
 		if key not in ["major", "minor", "patch", "prerelease", "build"]:
 			raise KeyError("Key does not exist");
+		if key not in ['prerelease','build']:
+			raise KeyError("Cannot delete major,minor or patch version")
 		self._version[key] = None
 
 	def __str__(self):

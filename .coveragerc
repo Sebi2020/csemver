@@ -4,3 +4,4 @@ omit =
     */site-packages/nose/*
     *__init__*
     csemver/utils.py
+    tests/test.py

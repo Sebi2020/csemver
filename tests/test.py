@@ -217,3 +217,36 @@ class TestCsemver(TestCase):
 		self.assertTrue(a <= b)
 		self.assertFalse(b <= a)
 		self.assertTrue(a <= a)
+
+	def test_len(self):
+		a = cs.parse("1.0.0")
+		self.assertEqual(len(a),3)
+		a = cs.parse("1.0.0-pre.d")
+		self.assertEqual(len(a),4)
+		a = cs.parse("1.0.0-pre.d+build.1")
+		self.assertEqual(len(a),5)
+
+	def test_iterate_over_version(self):
+		a = cs.parse("1.0.0-pre")
+		expect = [1,0,0,"pre"]
+		for i,v in zip(a,expect):
+			self.assertEqual(i,v)
+
+	def test_non_existing_key_raises_exception(self):
+		a = cs.parse("1.0.0")
+		with self.assertRaises(KeyError) as e:
+			val = a['nonexistingkey']
+		with self.assertRaises(KeyError) as e:
+			a['nokey'] = "d"
+
+	def test_del_item_Python3(self):
+		a = cs.parse("1.1.1-pre")
+		del a['prerelease']
+		self.assertEqual(str(a),"1.1.1")
+
+	def test_deL_wrong_key_raises_exception(self):
+		a = cs.parse("1.1.1")
+		with self.assertRaises(KeyError) as e:
+			del a['nokey']
+		with self.assertRaises(KeyError) as e:
+			del a['major']
