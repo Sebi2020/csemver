@@ -92,12 +92,15 @@ class csemver:
 
 	def incPatch(self, incBy=1):
 		""" Increase patch version x.y.z -> x.y.(z+incBy) """
+		if incBy > 0:
+			self._version['prerelease'] = self._version['build'] = None
 		self._version['patch'] += incBy
 		return self
 
 	def incMinor(self,incBy=1):
 		""" Increase minor version x.y.z -> x.(y+incBy).0 """
 		if(incBy>0):
+			self._version['prerelease'] = self._version['build'] = None
 			self._version['patch'] = 0
 			self._version['minor'] += incBy
 		return self
@@ -106,6 +109,7 @@ class csemver:
 		""" Increase major version x.y.z -> (x+incBy).0.0 """
 		if(incBy>0):
 			self._version['patch'] = self._version['minor'] = 0
+			self._version['prerelease'] = self._version['build'] = None
 			self._version['major'] += incBy
 		return self;
 
@@ -244,11 +248,7 @@ class csemver:
 		return not self.__lt__(value)
 
 	def __ne__(self, value):
-		parts = self._zip_vers(value)
-		for i,v in parts:
-			if i != v:
-	 			return True
-		return False
+		return not self.__eq__(value)
 		
 
 	def __add__(self, value):
