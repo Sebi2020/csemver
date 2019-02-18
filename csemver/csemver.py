@@ -277,7 +277,3 @@ class csemver:
 def parse(version = "0.1.0"):
 	""" Just an alias for csemver.csemver(version) """
 	return csemver(version);
-
-def parse_dir(v = "0.1.0"):
-	if not isinstance(v, str):
-		raise TypeError("You must supply a string")
