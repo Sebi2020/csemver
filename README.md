@@ -72,8 +72,6 @@ print(a)
 foo@bar:~$ python test.py
 0.1.0
 1.0.0-pre+build.1
-2.0.0-pre+build.1
-2.0.0-dev+build.1
 ```
 
 ### Manipulate specific parts

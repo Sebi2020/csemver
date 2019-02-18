@@ -32,11 +32,6 @@ _valid_ident = re.compile(r"""
 					   """, re.VERBOSE)
 _num = re.compile(r"^[1-9][0-9]*$")
 
-if not hasattr(__builtins__, 'cmp'):
-    def cmp(a, b):
-        return (a > b) - (a < b)
-
-
 class csemver:
 	""" Representation of an semantic software version """
 	
@@ -52,16 +47,6 @@ class csemver:
 		'==': self.__eq__,
 		'!=': self.__ne__
 		}
-	
-	def _build(self, val):
-		if _valid_ident.match(val) is not None:
-			self._version['build'] = val;
-		else:
-			raise ValueError("Not a valid build tag!")
-		
-	def _prerelease(self,val):
-		newstr = sv.format_version(self._version['major'],self._version['minor'],self._version['patch'],val,self._version['build']);
-		self._version = sv.parse(newstr);
 	
 	@deprecated
 	def setNumber(self,val):
@@ -137,7 +122,10 @@ class csemver:
 				raise ValueError("%s must be a number or a string!" % key)
 			self._version[key] = int(val);
 		else:
-			if not isinstance(val, str):
+			if val is None:
+				self._version[key] = None
+				return
+			if not isinstance(val,str):
 				raise TypeError("%s must be a string" % key)
 			if _valid_ident.match(val) is None:
 				raise ValueError("%s must be a valid semver identifier!" % key)
@@ -189,7 +177,7 @@ class csemver:
 		i,v = next(mmp)
 		if (i is None) and (v is not None):
 			return True
-		elif (i is not None) and (v is None):
+		elif i is None or v is None:
 			return False
 
 		# Check prerelease identfiers
@@ -224,7 +212,7 @@ class csemver:
 		i,v = next(mmp)
 		if (i is not None) and (v is None):
 			return True
-		elif (i is None) and (v is not None):
+		elif i is None or v is None:
 			return False
 
 		# Check prerelease identfiers
