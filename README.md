@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/Sebi2020/csemver.svg?branch=master)](https://travis-ci.com/Sebi2020/csemver)
+[![Coverage Status](https://coveralls.io/repos/github/Sebi2020/csemver/badge.svg?branch=feature%2Fdep)](https://coveralls.io/github/Sebi2020/csemver?branch=feature%2Fdep)
 ![Version Github: v0.2.0](https://img.shields.io/github/release/sebi2020/csemver.svg?colorB=green&style=flat)
 [![Version PyPi: v0.2.0](https://img.shields.io/pypi/v/csemver.svg?colorB=green&style=flat)](https://pypi.org/project/csemver/)
 ![Issue Count](https://img.shields.io/github/issues-raw/sebi2020/csemver.svg?style=flat)
@@ -71,8 +72,6 @@ print(a)
 foo@bar:~$ python test.py
 0.1.0
 1.0.0-pre+build.1
-2.0.0-pre+build.1
-2.0.0-dev+build.1
 ```
 
 ### Manipulate specific parts

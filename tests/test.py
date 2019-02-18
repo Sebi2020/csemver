@@ -42,6 +42,16 @@ class TestCsemver(TestCase):
 		s.number = "1.0.0";
 		self.assertEqual(str(s),"1.0.0");
 
+	def test_set_version(self):
+		s = cs.parse("0.1.0");
+		s.setNumber("1.0.0");
+		self.assertEqual(str(s),"1.0.0");
+
+	def test_del_version(self):
+		s = cs.parse("0.1.1")
+		s.delNumber()
+		self.assertEqual(str(s),"0.1.0")
+
 	def test_addition(self):
 		a = cs.parse("0.0.1");
 		b = cs.parse("0.2.0");
@@ -67,25 +77,41 @@ class TestCsemver(TestCase):
 		a = cs.parse("2.0.0");
 		b = cs.parse("1.0.0");
 		self.assertTrue(a>b);
+		self.assertFalse(b>a)
 		a = cs.parse("2.0.0");
 		b = cs.parse("2.0.0-pre");
 		self.assertTrue(a>b);
+		self.assertFalse(b>a)
 
 		a = cs.parse("0.1.0-pre1");
 		b = cs.parse("0.1.0-pre");
 		self.assertTrue(a>b);
+		self.assertFalse(b>a)
+
+		a = cs.parse("0.1.0-pre.1")
+		b = cs.parse("0.1.0-pre")
+		self.assertTrue(a>b)
+		self.assertFalse(b>a)
 
 	def test_comprehension_smaller(self):
 		a = cs.parse("1.0.0");
 		b = cs.parse("2.0.0");
 		self.assertTrue(a<b);
+		self.assertFalse(b<a);
 		a = cs.parse("1.0.0-pre");
 		b = cs.parse("1.0.0");
 		self.assertTrue(a<b);
+		self.assertFalse(b<a);
 
 		a = cs.parse("0.1.0-pre");
 		b = cs.parse("0.1.0-pre1");
 		self.assertTrue(a<b);
+		self.assertFalse(b<a)
+
+		a = cs.parse("0.1.0-pre")
+		b = cs.parse("0.1.0-pre.1")
+		self.assertTrue(a<b)
+		self.assertFalse(b<a)
 
 	def test_comprehension_equal(self):
 		a = cs.parse("1.0.0");
@@ -112,6 +138,7 @@ class TestCsemver(TestCase):
 		a = cs.parse("1.0.0-pre+build");
 		b = cs.parse("1.0.0-pre+build1");
 		self.assertFalse(a != b);
+		self.assertTrue(a == b);
 
 	def test_index_ops(self):
 		a = cs.parse(); # defaults to 0.1.0
@@ -125,35 +152,121 @@ class TestCsemver(TestCase):
 		self.assertEqual(a.number,"2.2.1-dev")
 		a['build'] = "build0"
 		self.assertEqual(a.number,"2.2.1-dev+build0")
-		#a['build'] = None
-		#self.assertEqual(a.number,"2.2.1-dev")
+		a['build'] = None
+		self.assertEqual(a.number,"2.2.1-dev")
 
-	def test_special_fields(self):
-		if sys.version_info < (3,0):
-			raise SkipTest("must be Python 3.0 or greater");
-		a = cs.parse();
-		a.prerelease = "pre";
-		self.assertEqual(a.number, "0.1.0-pre");
+	def test_wrong_index_op_value_raises_exception(self):
+		a = cs.parse(); # defaults to 0.1.0
+		with self.assertRaises(ValueError) as e:
+			a['major'] = "02"
+		with self.assertRaises(ValueError) as e:
+			a['minor'] = "01"
+		with self.assertRaises(ValueError) as e:
+			a['patch'] = "03"
+		with self.assertRaises(ValueError) as e:
+			a['prerelease'] = "+dev"
+		with self.assertRaises(ValueError) as e:
+			a['build'] = "+build0"
 
-		a.build = "build2";
-		self.assertEqual(a.number, "0.1.0-pre+build2");
+		with self.assertRaises(TypeError) as e:
+			a['major'] = []
+		with self.assertRaises(TypeError) as e:
+			a['minor'] = []
+		with self.assertRaises(TypeError) as e:
+			a['patch'] = []
+		with self.assertRaises(TypeError) as e:
+			a['prerelease'] = 3
+		with self.assertRaises(TypeError) as e:
+			a['build'] = 5
 
-		del a.prerelease
-		self.assertEqual(a.number, "0.1.0+build2")
+	def test_wrong_number_raises_exception(self):
+		self.assertRaises(ValueError, cs.parse,"0.1.1d")
+		self.assertRaises(TypeError, cs.parse, 5)
 
-		del a.build
-		self.assertEqual(a.number, "0.1.0")
+	def test_wrong_comprehension_type_raise_exception(self):
+		a = cs.parse("1.0.0")
+		with self.assertRaises(TypeError) as e:
+			a == 3
+		with self.assertRaises(TypeError) as e:
+			a < 3
+		with self.assertRaises(TypeError) as e:
+			a > 3
+		with self.assertRaises(TypeError) as e:
+			a != 3
+		with self.assertRaises(TypeError) as e:
+			a >= 3
+		with self.assertRaises(TypeError) as e:
+			a <= 3
 
-	def test_special_field_setters(self):
-		a = cs.parse();
-		a.setPrerelease("pre");
-		self.assertEqual(a.number, "0.1.0-pre");
+	def test_greater_equal(self):
+		a = cs.parse("1.0.0-pre")
+		b = cs.parse("1.0.0")
+		self.assertFalse(a >= b)
+		self.assertTrue(b >= a)
+		self.assertTrue(a >= a)
+		a = cs.parse("1.0.0-pre.1.3")
+		b = cs.parse("1.0.0-pre.1")
+		self.assertTrue(a >= b)
+		self.assertFalse(b >= a)
+		self.assertTrue(a >= a)
 
-		a.setBuild("build2");
-		self.assertEqual(a.number, "0.1.0-pre+build2");
 
-		a.delPrerelease();
-		self.assertEqual(a.number, "0.1.0+build2")
+	def test_less_equal(self):
+		a = cs.parse("1.0.0-pre")
+		b = cs.parse("1.0.0")
+		self.assertTrue(a <= b)
+		self.assertFalse(b <= a)
+		self.assertTrue(a <= a)
 
-		a.delBuild();
-		self.assertEqual(a.number, "0.1.0")		
+	def test_len(self):
+		a = cs.parse("1.0.0")
+		self.assertEqual(len(a),3)
+		a = cs.parse("1.0.0-pre.d")
+		self.assertEqual(len(a),4)
+		a = cs.parse("1.0.0-pre.d+build.1")
+		self.assertEqual(len(a),5)
+
+	def test_iterate_over_version(self):
+		a = cs.parse("1.0.0-pre")
+		expect = [1,0,0,"pre"]
+		for i,v in zip(a,expect):
+			self.assertEqual(i,v)
+
+	def test_non_existing_key_raises_exception(self):
+		a = cs.parse("1.0.0")
+		with self.assertRaises(KeyError) as e:
+			val = a['nonexistingkey']
+		with self.assertRaises(KeyError) as e:
+			a['nokey'] = "d"
+
+	def test_del_item_Python3(self):
+		a = cs.parse("1.1.1-pre")
+		del a['prerelease']
+		self.assertEqual(str(a),"1.1.1")
+
+	def test_del_wrong_key_raises_exception(self):
+		a = cs.parse("1.1.1")
+		with self.assertRaises(KeyError) as e:
+			del a['nokey']
+		with self.assertRaises(KeyError) as e:
+			del a['major']
+
+	def test_dictionary_conversation(self):
+		a = cs.parse("1.0.0-pre+build")
+		b = dict(a)
+		for k in b:
+			self.assertEqual(a[k],b[k])
+
+	def test_value_view(self):
+		a = cs.parse("1.0.0-pre+build")
+		b = a.values()
+		a['major'] = 2
+		a['minor'] = 1
+		a['build'] = "build.2"
+		for i,v in zip(a,b):
+			self.assertEqual(i,v)
+
+	def test_tuple_conversation(self):
+		a = cs.parse("1.0.0")
+		b = tuple(a)
+		self.assertEqual(b,(1,0,0))

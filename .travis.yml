@@ -6,4 +6,6 @@ python:
   - "3.5"
   - "3.6"
 
-script: python ./setup.py test
+script: nosetests --with-coverage
+after_success:
+  - coveralls
