@@ -250,3 +250,23 @@ class TestCsemver(TestCase):
 			del a['nokey']
 		with self.assertRaises(KeyError) as e:
 			del a['major']
+
+	def test_dictionary_conversation(self):
+		a = cs.parse("1.0.0-pre+build")
+		b = dict(a)
+		for k in b:
+			self.assertEqual(a[k],b[k])
+
+	def test_value_view(self):
+		a = cs.parse("1.0.0-pre+build")
+		b = a.values()
+		a['major'] = 2
+		a['minor'] = 1
+		a['build'] = "build.2"
+		for i,v in zip(a,b):
+			self.assertEqual(i,v)
+
+	def test_tuple_conversation(self):
+		a = cs.parse("1.0.0")
+		b = tuple(a)
+		self.assertEqual(b,(1,0,0))
