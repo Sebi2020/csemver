@@ -244,7 +244,7 @@ class TestCsemver(TestCase):
 		del a['prerelease']
 		self.assertEqual(str(a),"1.1.1")
 
-	def test_deL_wrong_key_raises_exception(self):
+	def test_del_wrong_key_raises_exception(self):
 		a = cs.parse("1.1.1")
 		with self.assertRaises(KeyError) as e:
 			del a['nokey']

@@ -90,6 +90,12 @@ class csemver:
 			self._version['major'] += incBy
 		return self;
 
+	def keys(self):
+		return self._version.keys()
+
+	def values(self):
+		return self._version.values()
+
 	def __getitem__(self, key):
 		""" Returns either major, minor, patch, prerelease or build """
 		if isinstance(key,int):
@@ -273,6 +279,8 @@ class csemver:
 		ret['prerelease'] = m[4]
 		ret['build'] = m[9]
 		return ret
+
+
 
 def parse(version = "0.1.0"):
 	""" Just an alias for csemver.csemver(version) """

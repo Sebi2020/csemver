@@ -1,7 +1,14 @@
 # Changelog
-## [0.3.0-dev0] - 19-02-18
+## [1.0.0-rc0] - 19-02-18
+
 ### Changed
-* todo
+* Replaced semver dependencies with own implementation
+* Index operator now allows strings and integers for major,minor and patch key
+* `csemver.number` property now returns a str instead of a dict.
+  If you wish to get a tuple or a dict, just do `tuple(a)` or `dict(a)` where `a` is a csemver instance
+
+### Removed
+- prerelease and build properties. They are now accessible through the index operator: `a['build'], a['prerelease']`
 
 ## [0.2.1-rc0] - 19-02-11
 ### Added
@@ -27,5 +34,6 @@
 + csemver class
 + Docstrings for `number`,`incMajor, incMinor, incPatch`
 
+[1.0.0-rc0]: https://github.com/sebi2020/csemver/compare/v0.2.1...v1.0.0-rc0
 [0.2.1-rc0]: https://github.com/sebi2020/csemver/compare/v0.1.0...v0.2.1-rc0
 [0.1.0]: https://github.com/sebi2020/csemver/compare/20f2f6f0810937af5fbc8f1ce7fc3d4a2383b28b...v0.1.0
