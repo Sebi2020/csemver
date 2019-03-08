@@ -1,4 +1,5 @@
 import re,copy
+from sys import version_info
 from collections import namedtuple,OrderedDict
 
 from .utils import deprecated,constrain
@@ -31,6 +32,7 @@ _valid_ident = re.compile(r"""
 					   $
 					   """, re.VERBOSE)
 _num = re.compile(r"^[1-9][0-9]*$")
+_LAST_NUMBER = re.compile(r'(?:[^\d]*(\d+)[^\d]*)+')
 
 class csemver:
 	""" Representation of an semantic software version """
@@ -91,10 +93,10 @@ class csemver:
 		return self;
 
 	def keys(self):
-		return self._version.keys()
+		return _compat_keys(self._version)
 
 	def values(self):
-		return self._version.values()
+		return _compat_values(self._version)
 
 	def __getitem__(self, key):
 		""" Returns either major, minor, patch, prerelease or build """
@@ -280,8 +282,54 @@ class csemver:
 		ret['build'] = m[9]
 		return ret
 
+	def incPrerelease(self, incBy = 1):
+		"""
+			Increments the prerelease field. If no number is found 1 will be appended.
+		"""
+		self._incField("prerelease",incBy)
+
+	def incBuild(self, incBy = 1):
+		"""
+			Increments the build field. If no number is found 1 will be appended.
+		"""
+		self._incField("build",incBy)
+
+	def _incField(self, field, val =1):
+		f = self[field]
+		if f is None:
+			self[field] = csemver._incStr(str(0),val)
+		elif not _LAST_NUMBER.search(f):
+			self[field] = f + "1"
+		else:
+			self[field] = csemver._incStr(f,val)
+
+	@staticmethod
+	def _incStr(string,val = 1):
+	    """
+	    Look for the last sequence of number(s) in a string and increment, from:
+	    http://code.activestate.com/recipes/442460-increment-numbers-in-a-string/#c1
+	    """
+	    match = _LAST_NUMBER.search(string)
+	    if match:
+	        next_ = str(int(match.group(1)) + val)
+	        start, end = match.span(1)
+	        string = string[:max(end - len(next_), start)] + next_ + string[end:]
+	    return string
+
 
 
 def parse(version = "0.1.0"):
 	""" Just an alias for csemver.csemver(version) """
 	return csemver(version);
+
+def _compat_keys(d):
+	if version_info < (3,0):
+		return d.viewkeys()
+	else:
+		return d.keys()
+
+def _compat_values(d):
+	if version_info < (3,0):
+		return d.viewvalues()
+	else:
+		return d.values()
