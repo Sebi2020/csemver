@@ -52,6 +52,14 @@ class TestCsemver(TestCase):
 		s.delNumber()
 		self.assertEqual(str(s),"0.1.0")
 
+	def test_del_op(self):
+		if sys.version_info < (3,0):
+			raise SkipTest("mustbe Python 3.0 or greater")
+		s = cs.parse("1.0.0")
+		self.assertEqual(s,"1.0.0")
+		del s.number
+		self.assertEqual(s, "0.1.0")
+
 	def test_addition(self):
 		a = cs.parse("0.0.1");
 		b = cs.parse("0.2.0");
@@ -92,6 +100,7 @@ class TestCsemver(TestCase):
 		b = cs.parse("0.1.0-pre")
 		self.assertTrue(a>b)
 		self.assertFalse(b>a)
+		self.assertTrue(a > "0.1.0-pre")
 
 	def test_comprehension_smaller(self):
 		a = cs.parse("1.0.0");
@@ -112,6 +121,7 @@ class TestCsemver(TestCase):
 		b = cs.parse("0.1.0-pre.1")
 		self.assertTrue(a<b)
 		self.assertFalse(b<a)
+		self.assertTrue(a < "0.1.0-pre.1")
 
 	def test_comprehension_equal(self):
 		a = cs.parse("1.0.0");
@@ -134,11 +144,18 @@ class TestCsemver(TestCase):
 		b = cs.parse("1.0.0-pre+build");
 		self.assertFalse(a == b);
 
+		a = cs.parse("1.0.0")
+		self.assertTrue(a == "1.0.0")
+		self.assertFalse(a == "0.1.0")
+
 	def test_comprehension_not_equal(self):
 		a = cs.parse("1.0.0-pre+build");
 		b = cs.parse("1.0.0-pre+build1");
 		self.assertFalse(a != b);
 		self.assertTrue(a == b);
+		a = cs.parse("1.0.0")
+		self.assertTrue(a != "0.1.0")
+
 
 	def test_index_ops(self):
 		a = cs.parse(); # defaults to 0.1.0
@@ -204,6 +221,10 @@ class TestCsemver(TestCase):
 		self.assertFalse(a >= b)
 		self.assertTrue(b >= a)
 		self.assertTrue(a >= a)
+		self.assertTrue(b >= "1.0.0-pre")
+		self.assertTrue(b >= "1.0.0")
+		self.assertFalse(b >= "1.1.0")
+
 		a = cs.parse("1.0.0-pre.1.3")
 		b = cs.parse("1.0.0-pre.1")
 		self.assertTrue(a >= b)
@@ -217,6 +238,7 @@ class TestCsemver(TestCase):
 		self.assertTrue(a <= b)
 		self.assertFalse(b <= a)
 		self.assertTrue(a <= a)
+		self.assertTrue(b <= "1.0.1")
 
 	def test_len(self):
 		a = cs.parse("1.0.0")

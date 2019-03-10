@@ -151,17 +151,24 @@ class csemver:
 		return zip(list(self._version.values())[:4], list(o._version.values())[:4])
 
 	def __eq__(self, value):
-	 	if not isinstance(value,csemver):
+		if isinstance(value,str):
+			csem_val = csemver(value)
+			return self == csem_val
+
+		if not isinstance(value,csemver):
 	 		raise TypeError("This type combination is not supported!");
 
-	 	parts = self._zip_vers(value)
-	 	for i,v in parts:
-	 		if i != v:
-	 			return False
- 		return True
+		parts = self._zip_vers(value)
+		for i,v in parts:
+			if i != v:
+				return False
+		return True
 		
 
 	def __gt__(self, value):
+		if isinstance(value,str):
+			csem_val = csemver(value)
+			return self > csem_val
 		if not isinstance(value,csemver):
 			raise TypeError("This type combination is not supported!");
 		parts = self._zip_vers(value)
@@ -197,6 +204,9 @@ class csemver:
 		return False
 
 	def __lt__(self, value):
+		if isinstance(value,str):
+			csem_val = csemver(value)
+			return self < csem_val
 		if not isinstance(value,csemver):
 			raise TypeError("This type combination is not supported!");
 		parts = self._zip_vers(value)
