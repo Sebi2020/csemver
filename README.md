@@ -164,28 +164,58 @@ odict_values([1, 1, 1, None, None])
 odict_values([3, 1, 1, None, None])
 ```
 
-### Iterate over version object
+### Iterate over csemver object
+Note: All code examples import csemver like this `from csemver import csemver as Version` before using `Version(...)`.
+
+**Plain version:**
 ```python
-from csemver import csemver as Version
-a = Version("1.1.1-rc+build2")
-for k,v in a:
-	print("%-10s -> %s" % (k,v))
-print()
-a = Version("1.1.1+build2")
-for k,v in a:
-	print("%-10s -> %s" % (k,v))
+a = Version("1.0.0")
+for i in zip(a.keys(),a): # Use only 'for i in a' if you don't need the keys
+	print(i)
 ```
 
-```bash
-major      -> 1
-minor      -> 1
-patch      -> 1
-prerelease -> rc
-build      -> build2
+**With prerelease:**
+```python
+a = Version("1.0.0-pre")
+for i in zip(a.keys(),a):
+	print(i)
+```
+**With build-tag:**<br />
+Attention: *Iteration stops at first NONE-ENTRY*
+```python
+a = Version("1.0.0+build")
+for i in zip(a.keys(),a):
+	print(i)
+```
+**Complete string:**
+```python
+a = Version("1.0.0-rc0+build0")
+for i in zip(a.keys(),a):
+	print(i)
+```
 
-major      -> 1
-minor      -> 1
-patch      -> 1
-prerelease -> None
-build      -> build2
+**Output:** (additional print calls were ommitted in source)
+```bash
+Plain version:
+('major', 1)
+('minor', 0)
+('patch', 0)
+
+With prerelease:
+('major', 1)
+('minor', 0)
+('patch', 0)
+('prerelease', 'pre')
+
+ATTENTION: Iteration stops at first NONE-ENTRY
+('major', 1)
+('minor', 0)
+('patch', 0)
+
+Complete string:
+('major', 1)
+('minor', 0)
+('patch', 0)
+('prerelease', 'rc0')
+('build', 'build0')
 ```
