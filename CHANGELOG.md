@@ -38,6 +38,6 @@
 + csemver class
 + Docstrings for `number`,`incMajor, incMinor, incPatch`
 
-[1.0.0-rc0]: https://github.com/sebi2020/csemver/compare/v0.2.1...v1.0.0-rc0
+[1.0.0-rc0]: https://github.com/sebi2020/csemver/compare/v0.2.1-rc0...v1.0.0-rc0
 [0.2.1-rc0]: https://github.com/sebi2020/csemver/compare/v0.1.0...v0.2.1-rc0
 [0.1.0]: https://github.com/sebi2020/csemver/compare/20f2f6f0810937af5fbc8f1ce7fc3d4a2383b28b...v0.1.0
