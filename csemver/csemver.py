@@ -101,15 +101,9 @@ class csemver:
 	def __getitem__(self, key):
 		""" Returns either major, minor, patch, prerelease or build """
 		if isinstance(key,int):
-			return tuple(self._version.values())[:len(self)][key]
+			return tuple(zip(self._version.keys(),self._version.values()))[key]
 
 		return self._version[key];
-	def __len__(self):
-		l = 0
-		for i in self._version.values():
-			if i is not None:
-				l+=1
-		return l
 
 	def __setitem__(self, key, val):
 		if key not in ["major", "minor", "patch", "prerelease", "build"]:

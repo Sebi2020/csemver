@@ -17,12 +17,14 @@ pip install csemver
 
 ## Version manipulation
 ### Increase Versions
-To increase the different versions **csemver** provides three methods
+To increase the different versions **csemver** provides five methods
 - `incMajor(incBy=1)`
 - `incMinor(incBy=1)`
 - `incPatch(incBy=1)`
+- `incPrerelease(incBy=1)`
+- `incBuild(incBy=1)`
 
-If needed, you can chain these calls: `a.incMajor(x).incMinor(y).incPatch(y)`
+If needed, you can chain the first three method calls: `a.incMajor(x).incMinor(y).incPatch(y)`. Attention: The order matters because an increment of major resets minor and an minor increment resets the patch version.
 
 ```python
 from csemver import csemver as Version
@@ -131,6 +133,7 @@ print(a<b)
 b.incPatch()
 print(b)
 print(a<b)
+print(a<"1.1.2")
 ```
 
 ```bash
@@ -140,4 +143,49 @@ Version<1.1.1> instance at 0x00000159D2061DD8
 False
 1.1.2
 True
+True
+```
+
+### Get a dictionary view
+If you wish you can retrieve a view on the different version parts with `keys()` and `values()`:
+
+```python
+from csemver import csemver as Version
+
+a = Version("1.1.1")
+vals = a.values()
+print(vals)
+a['major'] = 3
+print(vals)
+```
+
+```bash
+odict_values([1, 1, 1, None, None])
+odict_values([3, 1, 1, None, None])
+```
+
+### Iterate over version object
+```python
+from csemver import csemver as Version
+a = Version("1.1.1-rc+build2")
+for k,v in a:
+	print("%-10s -> %s" % (k,v))
+print()
+a = Version("1.1.1+build2")
+for k,v in a:
+	print("%-10s -> %s" % (k,v))
+```
+
+```bash
+major      -> 1
+minor      -> 1
+patch      -> 1
+prerelease -> rc
+build      -> build2
+
+major      -> 1
+minor      -> 1
+patch      -> 1
+prerelease -> None
+build      -> build2
 ```

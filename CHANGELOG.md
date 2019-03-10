@@ -1,9 +1,13 @@
 # Changelog
-## [1.0.0-rc0] - 19-02-18
+## [1.0.0-rc0] - 19-03-10
+### Added
++ String comprehensions with csemver objects
++ incBuild, incPrerelease functions to increment the last portion of the prerelease and build identifiers
++ `keys()` and `values()` to retrieve view objects (in Python 2.7 as well as in Python 3) of the semver version parts.
 
 ### Changed
 * Replaced semver dependencies with own implementation
-* Index operator now allows strings and integers for major,minor and patch key
+* Index operator now allows digit-strings or integers for the major, minor and patch key values.
 * `csemver.number` property now returns a str instead of a dict.
   If you wish to get a tuple or a dict, just do `tuple(a)` or `dict(a)` where `a` is a csemver instance
 
