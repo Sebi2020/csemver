@@ -31,6 +31,18 @@ class TestCsemver(TestCase):
 		s.incPatch();
 		self.assertEqual(str(s), "0.1.2");
 
+	def test_inc_build(self):
+		a = cs.parse("0.2.2+build0")
+		b = cs.parse("0.2.2+build1")
+		a.incBuild()
+		self.assertEqual(a,b)
+
+	def test_inc_pre(self):
+		a = cs.parse("0.1.0-rc0")
+		b = cs.parse("0.1.0-rc1")
+		a.incPrerelease()
+		self.assertEqual(a,b)
+
 	def test_number_descriptor(self):
 		s = cs.parse("1.2.3-pre+build");
 		self.assertEqual(s.number, "1.2.3-pre+build");
